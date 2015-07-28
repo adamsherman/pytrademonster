@@ -2,8 +2,10 @@
 most of the functionality that their API provides. Admittedly, their API documentation is a bit shoddy, but this project
 accounts for that where possible.
 
-Tested against their API Version 2.5
+*Tested against their API Version 2.5*
+*Intended for Python 2.7*
 
+|
 Getting Started
 ===============
 ::
@@ -12,10 +14,10 @@ Getting Started
          1. Checkout the project here and run 'python setup.py install'
          2. 'pip install pytrademonster' (use sudo if needed)
 
-
+|
 Examples
 ========
-
+    
 **Create an instance of PyTradeMonster and log in**
 
 The first time this is done, you'll be prompted for your user/pass
@@ -43,7 +45,30 @@ and it will be saved into a default file, 'cred.dat' or one of your choice
 
 **Get an option chain**
 
-**Place and order**
+.. code-block:: python
+
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.services import QuotesService
+    from pytrademonster.constants import TradeMonsterConstants
+    
+    pyTradeMonster = PyTradeMonster()
+    quotesService = QuotesService(pyTradeMonster)
+    
+    #get a list of option strikes for various expirations for a single security
+    results = quotesService.getParsedOptionChain('SPY')
+    
+
+**Place an order**
+
+.. code-block:: python
+
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.services import OrderService
+    from pytrademonster.constants import TradeMonsterConstants
+    
+    pyTradeMonster = PyTradeMonster()
+    orderService = QuotesService(pyTradeMonster)
+
 
 **Query an order**
 
