@@ -1,11 +1,11 @@
 **Pytrademonster** is a simple, pythonic interface to TradeMonster/Optionhouses' XML based API. It attempts to cover
 most of the functionality that their API provides. Admittedly, their API documentation is a bit shoddy, but this project
-accounts for that where possible. In order to trade systematically with them there is an account minumum that you must have - ar
+accounts for that where possible. In order to trade systematically with them there is an account minumum that you must maintain.
 
 *Tested against their API Version 2.5*
-|
+
 *Intended for Python 2.7*
-|
+
 Getting Started
 ===============
 ::
@@ -210,11 +210,10 @@ and it will be saved into a default file, 'cred.dat' or one of your choice
 
 Functions provided
 ==================
+This tries to be as consistent with their API as possible, but some functions just don't work as described. 
+The coverage is fairly robust, but not a complete representation of their entire API. 
 
 ::
-
-    This tries to be as consistent with their API as possible, but some functions just don't work as described. 
-    The coverage is fairly robust, but not a complete representation of their entire API. 
     
     For more details, look at the XML mappings in constants.py as well as the function calls in the various services.
     
