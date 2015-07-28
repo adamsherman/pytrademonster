@@ -17,9 +17,9 @@ Getting Started
          2. 'pip install pytrademonster' (use sudo if needed)
 
 |
-Examples (for more, see the tests in /testing)
+Examples (for more, see the unit tests)
 ========
-    
+
 **Create an instance of PyTradeMonster and log in**
 
 The first time this is done, you'll be prompted for your user/pass
@@ -221,5 +221,7 @@ The coverage is fairly robust, but not a complete representation of their entire
     
 
 
+Future development
+==================
 
-
+This is certainly a work in progress, and no guarantees, but feel free to shoot me a note here for anything you'd like to see.
