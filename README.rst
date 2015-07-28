@@ -1,10 +1,10 @@
 **Pytrademonster** is a simple, pythonic interface to TradeMonster/Optionhouses' XML based API. It attempts to cover
 most of the functionality that their API provides. Admittedly, their API documentation is a bit shoddy, but this project
-accounts for that where possible.
+accounts for that where possible. In order to trade systematically with them there is an account minumum that you must have - ar
 
 *Tested against their API Version 2.5*
+|
 *Intended for Python 2.7*
-
 |
 Getting Started
 ===============
@@ -15,7 +15,7 @@ Getting Started
          2. 'pip install pytrademonster' (use sudo if needed)
 
 |
-Examples
+Examples (for more, see the tests in /testing)
 ========
     
 **Create an instance of PyTradeMonster and log in**
@@ -57,29 +57,167 @@ and it will be saved into a default file, 'cred.dat' or one of your choice
     #get a list of option strikes for various expirations for a single security
     results = quotesService.getParsedOptionChain('SPY')
     
-
-**Place an order**
+**Get account information**
 
 .. code-block:: python
 
     from pytrademonster import PyTradeMonster
-    from pytrademonster.services import OrderService
+    from pytrademonster.services import AccountServices
+
+    pyTradeMonster = PyTradeMonster()
+    accountsService = AccountServices(pyTradeMonster)
+    
+    # return a dictionary of Account objects that contain useful account information
+    accounts = accountsService.getParsedAccountObjects()
+
+
+**Place an equity order**
+
+.. code-block:: python
+
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.services import OrderServices, AccountServices
+    from pytrademonster.objects import LimitOrder, OrderLeg
     from pytrademonster.constants import TradeMonsterConstants
     
     pyTradeMonster = PyTradeMonster()
-    orderService = QuotesService(pyTradeMonster)
 
+    orderService = OrderServices(pyTradeMonster)
+    accountsService = AccountServices(pyTradeMonster)
+    
+    # get our list of accounts
+    accounts = accountsService.getParsedAccountObjects()
+    
+    ACCOUNT_NUMBER = 'your account number'
+    
+    # create a simple limit order with a silly price
+    order = LimitOrder()
+    orderLeg = OrderLeg()
+    orderLeg.instrumentType = TradeMonsterConstants.INSTRUMENTS.EQUITY
+    orderLeg.symbol = 'SPY'
+    orderLeg.orderSide = OrderLeg.side.BUY
+    order.price = 0.01
+    order.quantity = 1
+    order.orderLegs = [orderLeg]
+    order.instrumentType = TradeMonsterConstants.INSTRUMENTS.EQUITY
+    order.timeInForce = LimitOrder.timeInForceEnum.DAY
+    order.marketSession = LimitOrder.marketSessionEnum.REG
 
-**Query an order**
+    # send the order to the trademonster
+    orderResponse = orderService.sendOrderAndGetParsedResponse(self.accounts[ACCOUNT_NUMBER], order)
+    
+    orderId = orderResponse.orderId
+    orderStatus = orderResponse.status
+    print 'Order {0} status is {1}'.format(orderId,status)
 
-**Modify an order**
+**Place a multi-leg option order**
+
+.. code-block:: python
+    
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.services import OrderServices, AccountServices
+    from pytrademonster.objects import LimitOrder, OrderLeg
+    from pytrademonster.constants import TradeMonsterConstants
+    
+    pyTradeMonster = PyTradeMonster()
+
+    orderService = OrderServices(pyTradeMonster)
+    accountsService = AccountServices(pyTradeMonster)
+    
+    # get our list of accounts
+    accounts = accountsService.getParsedAccountObjects()
+    
+    ACCOUNT_NUMBER = 'your account number'
+    
+    # Create a simple buy (debit) spread, by creating each individual leg   
+    # The symbol and spread name fields should be changed depending on the ticker
+    order = LimitOrder()
+    shortLeg = OrderLeg()
+    longLeg = OrderLeg()
+
+    shortLeg.instrumentType = TradeMonsterConstants.INSTRUMENTS.OPTION
+    shortLeg.symbol = 'TickerSymbol' #you can look up the ticker using a service or their GUI
+    shortLeg.orderSide = OrderLeg.side.SELL
+    shortLeg.quantityRatio = 1
+
+    longLeg.instrumentType = TradeMonsterConstants.INSTRUMENTS.OPTION
+    longLeg.symbol = 'TickerSymbol' #you can look up the ticker using a service or their GUI
+    longLeg.orderSide = OrderLeg.side.BUY
+    longLeg.quantityRatio = 1
+
+    order.price = 0.01
+    order.quantity = 1
+    order.instrumentType = TradeMonsterConstants.INSTRUMENTS.OPTION
+    order.timeInForce = LimitOrder.timeInForceEnum.DAY
+    order.marketSession = LimitOrder.marketSessionEnum.REG
+    order.orderLegs = []
+    order.orderLegs.append(shortLeg)
+    order.orderLegs.append(longLeg)
+    order.spreadName = TradeMonsterConstants.OrderRequests.ORDER_SPREAD_TYPES.PUT_VERTICAL #if it's a put spread
+
+    #send a live order with a silly price
+    orderResult = orderService.sendOrderAndGetParsedResponse(self.accounts[ACCOUNT_NUMBER], order)
+
+    status = orderResult.status
+    print 'Status of order is {0}'.format(status)
+    
+  
+**Cancel an order**
+
+.. code-block:: python
+    
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.services import OrderServices
+
+    pyTradeMonster = PyTradeMonster()
+    orderService = OrderServices(pyTradeMonster)
+    
+    # get the orderId from a recent order first
+    # i.e., orderId = orderService.sendOrderAndGetParsedResponse(self.accounts[ACCOUNT_NUMBER], order).orderId
+    
+    result = orderService.sendCancelOrder(orderId)
+    
+    
+**Get detailed position information**
+
+.. code-block:: python
+    
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.services import PositionService
+    
+    pyTradeMonster = PyTradeMonster()
+    positionService = PositionService(pyTradeMonster)
+    
+    # get account id from the account service first if needed
+    # this will return a list of existing positions by type and their associated information
+    result = positionService.getPositionsDetail(accountId)
+    
 
 **Plot your pnl**
+
+.. code-block:: python
+    
+    from pytrademonster import PyTradeMonster
+    from pytrademonster.visualizer import plotAccountPnl
+    
+    pyTradeMonster = PyTradeMonster()
+    accountNumber = 'xxxxxxx' # your account number
+    startTime = '20100101T00:00:00'
+    endTime = '20150730T00:00:00'
+    plotAccountPnl(pyTradeMonster, TradeMonsterConstants.AccountRequests.TRANSACTION_TYPES.TRADE, accountNumber, startTime, endTime, 'AAPL')
+
 
 
 Functions provided
 ==================
-This tries to be as consistent with their API as possible
+
+::
+
+    This tries to be as consistent with their API as possible, but some functions just don't work as described. 
+    The coverage is fairly robust, but not a complete representation of their entire API. 
+    
+    For more details, look at the XML mappings in constants.py as well as the function calls in the various services.
+    
 
 
 
