@@ -1,5 +1,7 @@
-**Pytrademonster** is a simple, pythonic interface to TradeMonster/Optionhouses' XML based API. It attempts to cover
-most of the functionality that their API provides. Admittedly, their API documentation is a bit shoddy, but this project
+*Pytrademonster* is a simple, pythonic interface to TradeMonster/Optionhouses' XML based API. It attempts to cover
+most of the functionality that their API provides. 
+
+Admittedly, their API documentation is a bit shoddy, but this project
 accounts for that where possible. In order to trade systematically with them there is an account minumum that you must maintain.
 
 *Tested against their API Version 2.5*
@@ -215,7 +217,7 @@ The coverage is fairly robust, but not a complete representation of their entire
 
 ::
     
-    For more details, look at the XML mappings in constants.py as well as the function calls in the various services.
+    For more details, look at the XML mappings in *constants.py* as well as the function calls in the services.
     
 
 
