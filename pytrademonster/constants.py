@@ -423,5 +423,6 @@ class TradeMonsterConstants(object):
         RETRIVE_DAY_CANCELLED_COUNT_ROOT = 'ns2:getCancelDayOrdersCountResponse'
         RETRIEVE_QUOTE_CHAIN_ROOT = 'ns2:getOptionChainResponse'
         RETRIEVE_QUOTE_SYMBOL_ROOT = 'ns2:getQuotesResponse'
+        RETRIEVE_POSITIONS_DETAILED_ROOT = 'ns2:getPositionsDetailNewResponse'
 
 

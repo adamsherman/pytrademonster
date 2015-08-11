@@ -3,6 +3,7 @@ __author__ = 'adam'
 import xmltodict
 
 from pytrademonster.constants import TradeMonsterConstants
+from pytrademonster.objects import PositionItem
 
 
 class PositionRequests(object):
@@ -78,3 +79,72 @@ class PositionServices(object):
     def getPositionsTransactions(self, accountId, positionType, symbol, instrumentType, userId):    
         payload = self.positionRequests.createTransactionHistoryPayload(accountId, positionType, symbol, instrumentType, userId)
         return self.pyTradeMonster.doCall(self.url,payload)
+
+    def getParsedPositionsDetail(self, accountId):
+        '''
+        Populate a dictionary of PositionsDetail
+        :return: list of all the positions
+        '''
+        positionDetailedResponse = self.getPositionsDetail(accountId)
+        items = positionDetailedResponse[TradeMonsterConstants.ResponseRoots.RETRIEVE_POSITIONS_DETAILED_ROOT]['item']
+        
+        positions = []
+        for item in items:
+            if item['description'] == 'multiple':
+                # TODO FIXME following loop is not tested; not sure if this is how we could iterate through multiple tags
+                for Position in item['positions']:
+                    position = PositionItem()
+                    position.UnderlierBeta = item['beta']
+                    position.UnderlierDescription = item['description']
+                    position.UnderlierInstrumentId = item['instrumentId']
+                    position.UnderlierInstrumentType = item['instrumentType']
+                    position.UnderlierMargin = item['margin']
+                    position.UnderlierPmMargin = item['pmMargin']
+                    position.UnderlierSymbol = item['symbol']
+                    self.parseSignlePositionQuote(position, Position)
+                    positions.append(position)
+            else:
+                position = PositionItem()
+                Position = item['positions']
+                position.UnderlierBeta = item['beta']
+                position.UnderlierDescription = item['description']
+                position.UnderlierInstrumentId = item['instrumentId']
+                position.UnderlierInstrumentType = item['instrumentType']
+                position.UnderlierMargin = item['margin']
+                position.UnderlierPmMargin = item['pmMargin']
+                position.UnderlierSymbol = item['symbol']
+                self.parseSignlePositionQuote(position, Position)
+                positions.append(position)
+        return positions
+
+    def parseSignlePositionQuote(self, position, xmlPosition):
+                position.accountId = xmlPosition['accountId']
+                position.costOpen = xmlPosition['costOpen']
+                position.costTotal = xmlPosition['costTotal']
+                position.day = xmlPosition['day']
+                position.dayCostOpen = xmlPosition['dayCostOpen']
+                position.dayCostTotal = xmlPosition['dayCostTotal']
+                position.daysToExpiry = xmlPosition['daysToExpiry']
+                position.description = xmlPosition['description']
+                position.exerciseStyle = xmlPosition['exerciseStyle']
+                position.expirationDate = xmlPosition['expirationDate']
+                position.holdingType = xmlPosition['holdingType']
+                position.instrumentId = xmlPosition['instrumentId']
+                position.instrumentType = xmlPosition['instrumentType']
+                position.month = xmlPosition['month']
+                position.mtdCostOpen = xmlPosition['mtdCostOpen']
+                position.mtdCostTotal = xmlPosition['mtdCostTotal']
+                position.opraCode = xmlPosition['opraCode']
+                position.optionType = xmlPosition['optionType']
+                position.positionId = xmlPosition['positionId']
+                position.positionType = xmlPosition['positionType']
+                position.quantity = xmlPosition['quantity']
+                position.shortDescription = xmlPosition['shortDescription']
+                position.strategyName = xmlPosition['strategyName']
+                position.strikePrice = xmlPosition['strikePrice']
+                position.symbol = xmlPosition['symbol']
+                position.symbolLongName = xmlPosition['symbolLongName']
+                position.valueMultiplier = xmlPosition['valueMultiplier']
+                position.year = xmlPosition['year']
+                position.ytdCostOpen = xmlPosition['ytdCostOpen']
+                position.ytdCostTotal = xmlPosition['ytdCostTotal']

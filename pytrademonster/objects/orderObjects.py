@@ -30,7 +30,7 @@ class OrderLeg(object):
     def __init__(self):
         self.orderSide = OrderLeg.side.BUY #default
         self.symbol = None
-        self.openOrClose = OrderLeg.openClose.OPEN #default
+        #self.openOrClose = OrderLeg.openClose.OPEN # default --> TM documentation recommends not to use this tag on page72
         self.quantityRatio = 1
         self.instrumentType = None
 
@@ -73,7 +73,7 @@ class OrderPreview(object):
         self.commnAndFees = None
         self.possibleFreeTradeCredit = None
         self.totalCost = None
-        self.cashBpEffect = None
+        #self.cashBpEffect = None
         self.buyingPowerEffect = None
         self.resultingBuyingPower = None
         self.resultingCashBuyingPower = None
