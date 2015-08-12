@@ -7,7 +7,7 @@ from collections import OrderedDict
 import xmltodict
 
 from pytrademonster.constants import TradeMonsterConstants
-from pytrademonster.objects import LimitOrder, OrderType, OrderResponse, NewOrderLeg, OrderPreview
+from pytrademonster.objects import LimitOrder, OrderType, OrderResponse, NewOrderLeg, OrderPreview, StopLimit, StopOrder
 
 
 class OrderRequests(object):
@@ -39,7 +39,16 @@ class OrderRequests(object):
         xmlObj['sendOrder']['orderLegEntries']['orderSide'] = order.orderLegs[0].orderSide
 
         if isinstance(order, LimitOrder):
-             xmlObj['sendOrder']['limitPrice'] = order.price
+            xmlObj['sendOrder']['limitPrice'] = order.price
+
+        if isinstance(order, StopLimit):
+            xmlObj['sendOrder']['limitPrice'] = order.price
+            xmlObj['sendOrder']['stopTriggerPrice'] = order.stopTriggerPrice
+            
+        if isinstance(order, StopOrder):
+            xmlObj['sendOrder']['stopTriggerPrice'] = order.stopTriggerPrice
+        
+        #TODO: add support for other order types as well
 
         return xmltodict.unparse(xmlObj)
 
@@ -74,7 +83,14 @@ class OrderRequests(object):
             xmlObj['sendOrder']['orderLegEntries'].append(orderLegDict)
 
         if isinstance(order, LimitOrder):
-             xmlObj['sendOrder']['limitPrice'] = order.price
+            xmlObj['sendOrder']['limitPrice'] = order.price
+
+        if isinstance(order, StopLimit):
+            xmlObj['sendOrder']['limitPrice'] = order.price
+            xmlObj['sendOrder']['stopTriggerPrice'] = order.stopTriggerPrice
+            
+        if isinstance(order, StopOrder):
+            xmlObj['sendOrder']['stopTriggerPrice'] = order.stopTriggerPrice
 
         return xmltodict.unparse(xmlObj, pretty='True')
 
@@ -292,7 +308,7 @@ class OrderServices(object):
         orderPreview = OrderPreview()
         orderPreviewRoot = root['orderPreviewVO']
         orderPreview.buyingPowerEffect = float(orderPreviewRoot['buyingPowerEffect']['amount'])
-        orderPreview.cashBpEffect = float(orderPreviewRoot['cashBpEffect']['amount'])
+        #orderPreview.cashBpEffect = float(orderPreviewRoot['cashBpEffect']['amount'])
         orderPreview.cashInLieu =  float(orderPreviewRoot['cashInLieu']['amount'])
         orderPreview.cost = float(orderPreviewRoot['cost']['amount'])
         orderPreview.commnAndFees = float(orderPreviewRoot['commnAndFees']['amount'])
@@ -404,8 +420,8 @@ class OrderServices(object):
         url = TradeMonsterConstants.URLS.ORDER_BOOK_SERVICE
         payload = self.orderRequests.createCountAllOpenOrdersPayload(accountId)
         result = self.pyTradeMonster.doCall(url,payload)
-        if TradeMonsterConstants.ResponseRoots.RETRIVE_ALL_CANCELLED_COUNT_ROOT in result:
-            return int(result[TradeMonsterConstants.ResponseRoots.RETRIVE_ALL_CANCELLED_COUNT_ROOT]['#text'])
+        if TradeMonsterConstants.ResponseRoots.RETRIEVE_ALL_CANCELLED_COUNT_ROOT in result:
+            return int(result[TradeMonsterConstants.ResponseRoots.RETRIEVE_ALL_CANCELLED_COUNT_ROOT]['#text'])
         return None
 
     def sendCountDayOrders(self, accountId):
@@ -417,8 +433,8 @@ class OrderServices(object):
         url = TradeMonsterConstants.URLS.ORDER_BOOK_SERVICE
         payload = self.orderRequests.createCountOpenDayOrdersPayload(accountId)
         result = self.pyTradeMonster.doCall(url,payload)
-        if TradeMonsterConstants.ResponseRoots.RETRIVE_DAY_CANCELLED_COUNT_ROOT in result:
-            return int(result[TradeMonsterConstants.ResponseRoots.RETRIVE_DAY_CANCELLED_COUNT_ROOT]['#text'])
+        if TradeMonsterConstants.ResponseRoots.RETRIEVE_DAY_CANCELLED_COUNT_ROOT in result:
+            return int(result[TradeMonsterConstants.ResponseRoots.RETRIEVE_DAY_CANCELLED_COUNT_ROOT]['#text'])
         return None
 
     def sendGetOrderHistory(self, orderId):

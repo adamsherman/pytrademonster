@@ -50,11 +50,12 @@ def plotAccountPnl(pyTradeMonster, transactionType, accountNumber, start, end, f
 def main():
     """
     Sample use case
+    REPLACE ACCOUNT NUMBER WITH YOUR ACTUAL ACCOUNT NUMBER!
     :return:
     """
     pyTradeMonster = PyTradeMonster()
-    accountNumber = 'xxxxxxx'
-    plotAccountPnl(pyTradeMonster, TradeMonsterConstants.AccountRequests.TRANSACTION_TYPES.TRADE, accountNumber, '20110101T00:00:00', '20150730T00:00:00', 'SPY')
+    accountNumber = 'xxxxxx'
+    plotAccountPnl(pyTradeMonster, TradeMonsterConstants.AccountRequests.TRANSACTION_TYPES.TRADE, accountNumber, '20110701T00:00:00', '20150830T00:00:00', 'SPY')
 
 
 if __name__ == '__main__':

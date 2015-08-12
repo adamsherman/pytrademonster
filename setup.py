@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytrademonster',
-    version='0.01',
-    url='github.com/adamsherman/pytrademonster',
+    version='0.11',
+    url='https://github.com/adamsherman/pytrademonster',
     license='MIT',
     author='Adam Sherman',
     author_email='adam.r.sherman@gmail.com',

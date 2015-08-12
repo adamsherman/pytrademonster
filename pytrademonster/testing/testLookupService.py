@@ -21,3 +21,6 @@ class TestLookupService(unittest.TestCase):
             print index,'\t',option
 
         self.assertGreaterEqual(optionsListLength, 1)
+		
+if __name__ == '__main__':
+    unittest.main()

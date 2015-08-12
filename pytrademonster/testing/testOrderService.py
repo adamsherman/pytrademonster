@@ -54,6 +54,8 @@ class TestOrderService(unittest.TestCase):
         return order
 
     def testSingleLimitOrder(self):
+        self.orderService.sendCancelAllOrders(self.accounts[ACCOUNT_NUMBER].accountNumber) #cancel everything first just in case
+        
         order = self.createSimpleLimitOrder()
         orderResponse = self.orderService.sendOrderAndGetParsedResponse(self.accounts[ACCOUNT_NUMBER], order)
 
@@ -62,6 +64,8 @@ class TestOrderService(unittest.TestCase):
         self.assertTrue(status in OrderStatus.status.__dict__.keys() )
 
     def testGetOrderConfirmation(self):
+        self.orderService.sendCancelAllOrders(self.accounts[ACCOUNT_NUMBER].accountNumber) #cancel everything first just in case
+        
         order = self.createSimpleLimitOrder()
         orderResponse = self.orderService.sendOrderAndGetParsedResponse(self.accounts[ACCOUNT_NUMBER], order)
 
@@ -74,7 +78,10 @@ class TestOrderService(unittest.TestCase):
         '''
         Test a simple buy spread (debit)
         :return:
+        
         '''
+        self.orderService.sendCancelAllOrders(self.accounts[ACCOUNT_NUMBER].accountNumber) #cancel everything first just in case
+        
         order = LimitOrder()
         shortLeg = OrderLeg()
         longLeg = OrderLeg()
