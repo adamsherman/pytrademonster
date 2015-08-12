@@ -30,7 +30,7 @@ class OrderLeg(object):
     def __init__(self):
         self.orderSide = OrderLeg.side.BUY #default
         self.symbol = None
-        #self.openOrClose = OrderLeg.openClose.OPEN # default --> TM documentation recommends not to use this tag on page72
+        self.openOrClose = None
         self.quantityRatio = 1
         self.instrumentType = None
 

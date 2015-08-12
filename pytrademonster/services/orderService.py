@@ -48,7 +48,8 @@ class OrderRequests(object):
         if isinstance(order, StopOrder):
             xmlObj['sendOrder']['stopTriggerPrice'] = order.stopTriggerPrice
         
-        #TODO: add support for other order type as well
+        #TODO: add support for other order types as well
+
         return xmltodict.unparse(xmlObj)
 
 
@@ -419,8 +420,8 @@ class OrderServices(object):
         url = TradeMonsterConstants.URLS.ORDER_BOOK_SERVICE
         payload = self.orderRequests.createCountAllOpenOrdersPayload(accountId)
         result = self.pyTradeMonster.doCall(url,payload)
-        if TradeMonsterConstants.ResponseRoots.RETRIVE_ALL_CANCELLED_COUNT_ROOT in result:
-            return int(result[TradeMonsterConstants.ResponseRoots.RETRIVE_ALL_CANCELLED_COUNT_ROOT]['#text'])
+        if TradeMonsterConstants.ResponseRoots.RETRIEVE_ALL_CANCELLED_COUNT_ROOT in result:
+            return int(result[TradeMonsterConstants.ResponseRoots.RETRIEVE_ALL_CANCELLED_COUNT_ROOT]['#text'])
         return None
 
     def sendCountDayOrders(self, accountId):
@@ -432,8 +433,8 @@ class OrderServices(object):
         url = TradeMonsterConstants.URLS.ORDER_BOOK_SERVICE
         payload = self.orderRequests.createCountOpenDayOrdersPayload(accountId)
         result = self.pyTradeMonster.doCall(url,payload)
-        if TradeMonsterConstants.ResponseRoots.RETRIVE_DAY_CANCELLED_COUNT_ROOT in result:
-            return int(result[TradeMonsterConstants.ResponseRoots.RETRIVE_DAY_CANCELLED_COUNT_ROOT]['#text'])
+        if TradeMonsterConstants.ResponseRoots.RETRIEVE_DAY_CANCELLED_COUNT_ROOT in result:
+            return int(result[TradeMonsterConstants.ResponseRoots.RETRIEVE_DAY_CANCELLED_COUNT_ROOT]['#text'])
         return None
 
     def sendGetOrderHistory(self, orderId):
