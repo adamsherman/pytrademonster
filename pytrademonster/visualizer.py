@@ -5,10 +5,17 @@ from datetime import datetime
 import pandas as pd
 from ggplot import *
 
-from pyTradeMonster import PyTradeMonster, log
+
+import os.path, sys
+# used to set path to be root
+parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, parent)
+
+
+#from pyTradeMonster import log, PyTradeMonster
 from pytrademonster.services import AccountServices
 from pytrademonster.constants import TradeMonsterConstants
-
+from pytrademonster import PyTradeMonster, log
 
 """
 Methods for plotting useful account information
