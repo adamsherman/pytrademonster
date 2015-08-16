@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytrademonster',
-    version='0.11',
+    version='0.12',
     url='https://github.com/adamsherman/pytrademonster',
     license='MIT',
     author='Adam Sherman',
