@@ -23,7 +23,7 @@ Examples (for more, see the unit tests)
 **Create an instance of PyTradeMonster and log in**
 
 The first time this is done, you'll be prompted for your user/pass
-and it will be saved into a default file, 'cred.dat' or one of your choice
+and it will be encrypted and saved into a default file, 'cred.dat' or one of your choice
 
 .. code-block:: python
 
