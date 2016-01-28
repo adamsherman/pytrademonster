@@ -1,5 +1,5 @@
 *Pytrademonster* is a simple, pythonic interface to TradeMonster/Optionhouses' XML based API. It attempts to cover
-most of the functionality that their API provides. 
+most of the functionality that their API provides. Optionshouse uses an xml schema which can be requested from them or by using a tool such as Charles Proxy to figure out.
 
 Admittedly, their API documentation is a bit shoddy, but this project
 accounts for that where possible. In order to trade systematically with them there is an account minumum that you must maintain.
