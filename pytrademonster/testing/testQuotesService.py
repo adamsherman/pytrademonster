@@ -1,4 +1,3 @@
-from pytrademonster.pyTradeMonster import PyTradeMonster
 
 __author__ = 'adam'
 

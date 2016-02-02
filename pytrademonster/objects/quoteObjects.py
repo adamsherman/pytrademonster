@@ -43,7 +43,7 @@ class QuoteOptionItem(object):
 
 class QuoteItem(object):
     '''
-    Representation of an actual price quote for either any asset Trademonster trades
+    Representation of an actual price quote for any asset Trademonster trades
     '''
 
     def __init__(self):
