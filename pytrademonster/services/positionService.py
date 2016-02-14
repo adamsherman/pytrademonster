@@ -92,25 +92,22 @@ class PositionServices(object):
         if isinstance(items,list):
             for item in items:
                 Position = item['positions']
-                if isinstance(Position,list):
-                    for leg in Position:
-                        position = self.createPositionItemObject(item, leg)
-                        positions.append(position)
-                else:
-                    position = self.createPositionItemObject(item, Position)
-                    positions.append(position)
+                self.parsePosition(Position,item,positions)
         else:
             Position = items['positions']
-            if isinstance(Position,list):
-                for leg in Position:
-                    position = self.createPositionItemObject(items, leg)
-                    positions.append(position)
-            else:
-                position = self.createPositionItemObject(items, Position)
-                positions.append(position)
+            self.parsePosition(Position,items,positions)
+
         return positions
 
-    
+    def parsePosition(self, Position, item, positions):
+        if isinstance(Position,list):
+            for leg in Position:
+                position = self.createPositionItemObject(item, leg)
+                positions.append(position)
+        else:
+            position = self.createPositionItemObject(item, Position)
+            positions.append(position)
+
     def createPositionItemObject(self, items, positionLeg):
         '''
         Helper for creating a PositionItem object
