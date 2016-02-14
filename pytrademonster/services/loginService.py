@@ -2,7 +2,6 @@ __author__ = 'adamsherman'
 
 import sys
 import logging
-
 import requests
 
 from pytrademonster.constants import TradeMonsterConstants

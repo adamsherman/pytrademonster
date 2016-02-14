@@ -8,8 +8,8 @@ from requests import Session,adapters
 import xmltodict
 from simplecrypt import encrypt,decrypt
 
-from pytrademonster.services import LoginService
-from pytrademonster.constants import TradeMonsterConstants
+from services import LoginService
+from constants import TradeMonsterConstants
 
 
 log = logging.getLogger(__name__)

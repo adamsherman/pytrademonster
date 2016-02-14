@@ -2,7 +2,6 @@ __author__ = 'adam'
 
 from datetime import datetime
 
-from lxml import etree
 import xmltodict
 
 from pytrademonster.constants import TradeMonsterConstants
@@ -53,13 +52,13 @@ class AccountRequests(object):
         return xmltodict.unparse(xmlObj)
 
     def createNewGroupPayload(self, groupNameToUse, accountIds):
-        createAcct = etree.Element(TradeMonsterConstants.AccountRequests.CREATE_ACCOUNT_GROUP)
-        groupName = etree.SubElement(createAcct, 'groupName')
-        groupName.text = groupNameToUse
-        groupId = etree.SubElement(createAcct, 'groupId')
-        for acct in accountIds:
-            accountIds = etree.SubElement(createAcct, 'accountIds')
-            accountIds.text = acct
+        xmlStr = TradeMonsterConstants.AccountRequests.CREATE_ACCOUNT_GROUP
+        xmlObj = xmltodict.parse(xmlStr)
+        xmlObj['createAccountGroup']['groupName'] = groupNameToUse
+        xmlObj['createAccountGroup']['groupId'] = ''
+        xmlObj['createAccountGroup']['accountIds'] = accountIds
+        return xmltodict.unparse(xmlObj)
+
 
     def createAccountPerformancePayload(self, accountNumber,accountId, fromDate, toDate, category=TradeMonsterConstants.AccountRequests.PERFORMANCE_CATEGORY.SYMBOL ):
         xmlStr = TradeMonsterConstants.AccountRequests.DEFAULT_ACCOUNT_PERFORMANCE
@@ -209,6 +208,12 @@ class AccountServices(object):
         return self.pyTradeMonster.doCall(url,payload)
 
     def doCreateAccountGroup(self, groupNameToUse, accountIds):
+        '''
+        Create a new group with a list of accountIds
+        :param groupNameToUse:
+        :param accountIds: list of account ids
+        :return:
+        '''
         url = TradeMonsterConstants.URLS.GROUP_SERVICE
         payload =self.accountRequests.createNewGroupPayload(groupNameToUse, accountIds)
         self.pyTradeMonster.doCall(url,payload)

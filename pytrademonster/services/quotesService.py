@@ -112,6 +112,38 @@ class QuotesService(object):
         return self.pyTradeMonster.doCall(url, payload)
 
 
+    def parseQuoteItemHelper(self, item):
+        '''
+        Helper for parsing quotes
+        :param item:
+        :return:
+        '''
+        quote = QuoteItem()
+        quote.symbol = item['symbol']
+        quote.askPrice = item['askPrice']['amount']
+        quote.askSize = item['askSize']
+        quote.bidPrice = item['bidPrice']['amount']
+        quote.bidSize = item['bidSize']
+        quote.closingMark = item['closingMark']['amount']
+        quote.currency = item['bidPrice']['currency']
+        quote.dividendType = item['divType'] if 'divType' in item else None
+        quote.dividend = item['dividend']['amount'] if 'dividend' in item else None
+        quote.dividendDate = item['dividendDate'] if 'dividendDate' in item else None
+        quote.highPrice = item['highPrice']['amount']
+        quote.impliedVolatility = item['impliedVolatility']
+        quote.instrumentType = item['instrumentType']
+        quote.lastTradedSize = item['lastSize']
+        quote.lastPrice = item['lastTradedPrice']['amount']
+        quote.lastTradedTimeMs = item['lastTradeTimeMillis'] if 'lastTradeTimeMillis' in item else None
+        quote.lowPrice = item['lastTradedPrice']
+        quote.openPrice = item['openPrice']['amount']
+        quote.previousClosePrice = item['previousClosePrice']['amount']
+        quote.volume = item['volume']
+        quote.yearHigh = item['yearHighPrice']['amount'] if 'yearHighPrice' in item else None
+        quote.yearLow = item['yearLowPrice']['amount'] if 'yearLowPrice' in item else None
+
+        return quote
+
 
     def getParsedQuotes(self, symbolTypeDict):
         '''
@@ -122,31 +154,12 @@ class QuotesService(object):
         quotesResponse = self.getQuotes(symbolTypeDict)
         items = quotesResponse[TradeMonsterConstants.ResponseRoots.RETRIEVE_QUOTE_SYMBOL_ROOT]['item']
         quoteDict = {}
-        for item in items:
-            quote = QuoteItem()
-            quote.symbol = item['symbol']
-            quote.askPrice = item['askPrice']['amount']
-            quote.askSize = item['askSize']
-            quote.bidPrice = item['bidPrice']['amount']
-            quote.bidSize = item['bidSize']
-            quote.closingMark = item['closingMark']['amount']
-            quote.currency = item['bidPrice']['currency']
-            quote.dividendType = item['divType'] if 'divType' in item else None
-            quote.dividend = item['dividend']['amount'] if 'dividend' in item else None
-            quote.dividendDate = item['dividendDate'] if 'dividendDate' in item else None
-            quote.highPrice = item['highPrice']['amount']
-            quote.impliedVolatility = item['impliedVolatility']
-            quote.instrumentType = item['instrumentType']
-            quote.lastTradedSize = item['lastSize']
-            quote.lastPrice = item['lastTradedPrice']['amount']
-            quote.lastTradedTimeMs = item['lastTradeTimeMillis'] if 'lastTradeTimeMillis' in item else None
-            quote.lowPrice = item['lastTradedPrice']
-            quote.openPrice = item['openPrice']['amount']
-            quote.previousClosePrice = item['previousClosePrice']['amount']
-            quote.volume = item['volume']
-            quote.yearHigh = item['yearHighPrice']['amount'] if 'yearHighPrice' in item else None
-            quote.yearLow = item['yearLowPrice']['amount'] if 'yearLowPrice' in item else None
-
+        if isinstance(items, list):
+            for item in items:
+                quote = self.parseQuoteItemHelper(item)
+                quoteDict[quote.symbol] = quote
+        else:
+            quote = self.parseQuoteItemHelper(items)
             quoteDict[quote.symbol] = quote
 
         return quoteDict
