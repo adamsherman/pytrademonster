@@ -91,30 +91,43 @@ class PositionServices(object):
         positions = []
         if isinstance(items,list):
             for item in items:
-                    for Position in item['positions']:
-                        position = PositionItem()
-                        position.UnderlierBeta = item['beta']
-                        position.UnderlierDescription = item['description']
-                        position.UnderlierInstrumentId = item['instrumentId']
-                        position.UnderlierInstrumentType = item['instrumentType']
-                        position.UnderlierMargin = item['margin']
-                        position.UnderlierPmMargin = item['pmMargin']
-                        position.UnderlierSymbol = item['symbol']
-                        self.parseSinglePositionQuote(position, Position)
+                Position = item['positions']
+                if isinstance(Position,list):
+                    for leg in Position:
+                        position = self.createPositionItemObject(item, leg)
                         positions.append(position)
+                else:
+                    position = self.createPositionItemObject(item, Position)
+                    positions.append(position)
         else:
-            position = PositionItem()
             Position = items['positions']
-            position.UnderlierBeta = items['beta']
-            position.UnderlierDescription = items['description']
-            position.UnderlierInstrumentId = items['instrumentId']
-            position.UnderlierInstrumentType = items['instrumentType']
-            position.UnderlierMargin = items['margin']
-            position.UnderlierPmMargin = items['pmMargin']
-            position.UnderlierSymbol = items['symbol']
-            self.parseSinglePositionQuote(position, Position)
-            positions.append(position)
+            if isinstance(Position,list):
+                for leg in Position:
+                    position = self.createPositionItemObject(items, leg)
+                    positions.append(position)
+            else:
+                position = self.createPositionItemObject(items, Position)
+                positions.append(position)
         return positions
+
+    
+    def createPositionItemObject(self, items, positionLeg):
+        '''
+        Helper for creating a PositionItem object
+        :param items:
+        :param positionLeg:
+        :return:
+        '''
+        position = PositionItem()
+        position.UnderlierBeta = items['beta']
+        position.UnderlierDescription = items['description']
+        position.UnderlierInstrumentId = items['instrumentId']
+        position.UnderlierInstrumentType = items['instrumentType']
+        position.UnderlierMargin = items['margin']
+        position.UnderlierPmMargin = items['pmMargin']
+        position.UnderlierSymbol = items['symbol']
+        self.parseSinglePositionQuote(position, positionLeg)
+        return position
 
     def parseSinglePositionQuote(self, position, xmlPosition):
         '''
