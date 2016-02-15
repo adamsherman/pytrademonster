@@ -136,8 +136,10 @@ class PositionServices(object):
         position.accountId = xmlPosition['accountId']
         position.costOpen = xmlPosition['costOpen']
         position.costTotal = xmlPosition['costTotal']
-        position.day = xmlPosition['day']
-        position.dayCostOpen = xmlPosition['dayCostOpen']
+        if 'day' in xmlPosition:
+            position.day = xmlPosition['day']
+        if 'dayCostOpen' in xmlPosition:
+            position.dayCostOpen = xmlPosition['dayCostOpen']
         position.dayCostTotal = xmlPosition['dayCostTotal']
         position.daysToExpiry = xmlPosition['daysToExpiry']
         position.description = xmlPosition['description']
