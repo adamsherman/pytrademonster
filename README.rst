@@ -1,10 +1,14 @@
 *Deprecated*
-=============
+============
 
 *As of September 2017, Optionshouse has been fully integrated into eTrade
-and as such this API is no longer valid for eTrade's own API. For reference only at this point*
+and as such this API is no longer valid for eTrade's own API. For reference only at this point.*
 
 ====
+
+
+
+
 
 
 
